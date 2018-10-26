@@ -20,13 +20,13 @@ Table of Contents:
 
 <a name='quick'></a>
 
-## Quick intro
+## 간단한 소개
 
-It is possible to introduce neural networks without appealing to brain analogies. In the section on linear classification we computed scores for different visual categories given the image using the formula \\( s = W x \\), where \\(W\\) was a matrix and \\(x\\) was an input column vector containing all pixel data of the image. In the case of CIFAR-10, \\(x\\) is a [3072x1] column vector, and \\(W\\) is a [10x3072] matrix, so that the output scores is a vector of 10 class scores. 
+뇌 비유를 들지 않고도 신경망(neural networks)를 소개할 수 있다. 선형분류에 관한 글에서 우리는 \\( s = W x \\) 식을 이용해 주어진 이미지를 가지고 각 카테고리들에 대한 스코어를 계산했었다. 이 때 \\(W\\)는 행렬이고 \(x\\)는 이미지의 모든 픽셀 데이터를 포함하는 열벡터 입력이었다. CIFAR-10의 경우, \\(x\\)는 [3072x1] 크기의 열벡터이며 \\(W\\)는 [10x3072] 크기의 행렬이므로, 출력 스코어는 10개의 클래스 점수의 벡터이다.
 
-An example neural network would instead compute \\( s = W_2 \max(0, W_1 x) \\). Here, \\(W_1\\) could be, for example, a [100x3072] matrix transforming the image into a 100-dimensional intermediate vector. The function \\(max(0,-) \\) is a non-linearity that is applied elementwise. There are several choices we could make for the non-linearity (which we'll study below), but this one is a common choice and simply thresholds all activations that are below zero to zero. Finally, the matrix \\(W_2\\) would then be of size [10x100], so that we again get 10 numbers out that we interpret as the class scores. Notice that the non-linearity is critical computationally - if we left it out, the two matrices could be collapsed to a single matrix, and therefore the predicted class scores would again be a linear function of the input. The non-linearity is where we get the *wiggle*. The parameters \\(W_2, W_1\\) are learned with stochastic gradient descent, and their gradients are derived with chain rule (and computed with backpropagation).
+신경망은 그 대신 \\( s = W_2 \max(0, W_1 x) \\)을 계산한다. 여기서 \\(W_1\\)은 예를 들면 이미지를 100차원 중간 벡터로 변환하는 [100x3072]행렬이 될 수 있다. 함수 \\(max(0,-) \\)은 요소별(elementwise)로 적용되는 비선형 함수이다. 비선형 함수를 선택하는 방법에는 몇 가지가 있지만(아래에서 공부할 것이다), 이 함수는 흔히 쓰이는 것이고 0 이하의 모든 활성화를 모두 0으로 만든다. 마지막으로 행렬 \\(W_2\\)의 크기는 [10x100]이 될 것이고, 따라서 우리는 10개의 숫자를 가져와 클래스 점수로 계산한다. 비선형이 계산적으로 매우 중요하다는 것에 주목하자. 만약 이를 생략한다면 두 행렬은 한 행렬이 되고, 따라서 예측되는 클래스 점수는 또다시 입력의 선형함수가 될 것이다. 비선형에서 우리는 *속도*를 얻는다. 파라미터 \\(W_2, W_1\\)는 확률적 경사하강법(stochastic gradient descent)으로 학습되며, 그 기울기는 연쇄 법칙으로 유도되고, 역전파로 계산된다.
 
-A three-layer neural network could analogously look like \\( s = W_3 \max(0, W_2 \max(0, W_1 x)) \\), where all of \\(W_3, W_2, W_1\\) are parameters to be learned. The sizes of the intermediate hidden vectors are hyperparameters of the network and we'll see how we can set them later. Lets now look into how we can interpret these computations from the neuron/network perspective.
+3층 신경망은 유사한 방식으로 \\( s = W_3 \max(0, W_2 \max(0, W_1 x)) \\)처럼 나타낼 수 있고, \\(W_3, W_2, W_1\\)은 모두 학습되어야 하는 파라미터이다. 중간 은닉 벡터의 크기는 네트워크의 하이퍼파라미터이며, 나중에 어떻게 설정할 수 있는지 살펴볼 것이다. 이제 뉴런/네트워크의 관점에서 이러한 계산을 어떻게 해석할 수 있는지 알아보자.
 
 <a name='intro'></a>
 
